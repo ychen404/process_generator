@@ -10,7 +10,7 @@ You now have two processes. We change the scheduling policy of the child 1 to FI
 
 Parent and child 1 fork(), creating children 2.
 
-You now have four processes. Children 2 are changed to Round Robin scheduling policy
+You now have four processes. Children 2 are changed to Round Robin scheduling policy.
 
 
 Finally, we fork() again. You now have eight processes. And we change the newly fork() children scheduling policy to Batch.
