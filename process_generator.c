@@ -9,36 +9,24 @@
 #define CURR_THREAD 0
 #define MY_PRIORITY 98
 
-
 /*
 
-Loop starts in parent, i == 0
+Loop starts in parent
 
 Parent fork()s, creating child 1.
 
-You now have two processes. Both print i=0.
+You now have two processes. We change the scheduling policy of the child 1 to FIFO scheduling policy.
 
-Loop restarts in both processes, now i == 1.
 
-Parent and child 1 fork(), creating children 2 and 3.
+Parent and child 1 fork(), creating children 2.
 
-You now have four processes. All four print i=1.
+You now have four processes. Children 2 are changed to Round Robin scheduling policy
 
-Loop restarts in all four processes, now i == 2.
 
-Parent and children 1 through 3 all fork(), creating children 4 through 7.
+Finally, we fork() again. You now have eight processes. And we change the newly fork() children scheduling policy to Batch.
 
-You now have eight processes. All eight print i=2.
 
-Loop restarts in all eight processes, now i == 3.
-
-Loop terminates in all eight processes, as i < 3 is no longer true.
-
-All eight processes print hi.
-
-All eight processes terminate.
-
-So you get 0 printed two times, 1 printed four times, 2 printed 8 times, and hi printed 8 times.
+So you get 1 default policy (TS), 1 FIFO (FF), 2 Round Robin (RR), and 4 Batch (B).
 
 */
 
@@ -67,63 +55,6 @@ void printSchedulingPolicy(void)
 
 
 void forkProcesses()
-{
-	int ret;
-	struct sched_param param;
-	ret = sched_getparam(CURR_THREAD, &param);
-	param.sched_priority = MY_PRIORITY;
-
-
-	for (int i = 0; i < 3; i++) {
-	int ret;
-
-	if (i == 0) {
-		// fifo
-		ret = sched_getparam(CURR_THREAD, &param);
-	 	param.sched_priority = 98;
-
-		if (sched_setscheduler(CURR_THREAD, SCHED_FIFO, &param) == -1) {
-				fprintf(stderr, "error setting scheduler, make sure you are root.\n");
-				exit(1);}
-		//printSchedulingPolicy();
-	}
-
-	if (i == 1) {
-		// rr
-		ret = sched_getparam(CURR_THREAD, &param);
-		param.sched_priority = 97;
-
-		if (sched_setscheduler(CURR_THREAD, SCHED_RR, &param) == -1) {
-				fprintf(stderr, "error setting scheduler, make sure you are root.\n");
-				exit(1);}
-		//printSchedulingPolicy();
-
-	}
-
-	if (i == 2) {
-		// batch
-		ret = sched_getparam(CURR_THREAD, &param);
-		param.sched_priority = 0;
-
-		if (sched_setscheduler(CURR_THREAD, SCHED_BATCH, &param) == -1) {
-				fprintf(stderr, "error setting scheduler, make sure you are root.\n");
-				exit(1);}
-		//printSchedulingPolicy();
-
-	} 
-
-	fork();
-	printf("[%d] [%d] i=%d\n", getppid(), getpid(), i);
-
-	}
-	//printf("hello\n");
-	//printf("Hello [%d] [%d]\n", getppid(), getpid());
-
-
-}
-
-
-void siren()
 {
 
 	int ret;
@@ -167,7 +98,7 @@ void siren()
 int main(void)
 {
 
-	siren();
+	forkProcesses();
 	while(1){}
 	return 0;
 }
