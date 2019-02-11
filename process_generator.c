@@ -11,7 +11,7 @@
 
 /*
 
-Loop starts in parent
+Program starts in creating a parent process
 
 Parent fork()s, creating child 1.
 
