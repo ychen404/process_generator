@@ -95,9 +95,9 @@ int main(void)
 	 */
 	fork_processes();
 	/*
-	 * Use endless loop to keep the program running so that you can check the 
-	 * result with another terminal.
+	 * Sleep for 30 seconds so that you can check the result with another 
+	 * terminal.
 	 */
-	while(1){}
+	sleep(30);
 	return 0;
 }
