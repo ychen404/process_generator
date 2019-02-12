@@ -14,14 +14,11 @@
 
 #define CURR_THREAD 0
 
-/*
- * Create processes using fork() system call.
- */
-void fork_processes()
+int main(void)
 {
 	int ret, ret_child_1, ret_child_2, ret_child_3;
 	struct sched_param param;
-	
+
 	/*
 	 * Retrieves the scheduling parameters from the current process.
 	 */
@@ -47,7 +44,7 @@ void fork_processes()
 		 * The sched_setscheduler() returns 0 on success and -1 on failure.
 		 */
 		if (sched_setscheduler(CURR_THREAD, SCHED_FIFO, &param) == -1) {
-		fprintf(stderr, "error setting scheduler, maker sure you are root\n");
+			fprintf(stderr, "error setting scheduler, maker sure you are root\n");
 		}
 	}
 
@@ -65,7 +62,7 @@ void fork_processes()
 		 * Change the child 2 processes to Round Robin scheduling policy.
 		 */
 		if (sched_setscheduler(CURR_THREAD, SCHED_RR, &param) == -1) {
-		fprintf(stderr, "error setting scheduler, maker sure you are root\n");
+			fprintf(stderr, "error setting scheduler, maker sure you are root\n");
 		}
 	
 	}
@@ -83,18 +80,16 @@ void fork_processes()
 		 * Change the child 3 processes to batch.
 		 */
 		if (sched_setscheduler(CURR_THREAD, SCHED_BATCH, &param) == -1) {
-		fprintf(stderr, "error setting scheduler, maker sure you are root\n");
+			fprintf(stderr, "error setting scheduler, maker sure you are root\n");
 		}
 	}
-}
 
-int main(void)
-{
+
 	/*
 	 * So you have 1 default policy (TS), 1 FIFO (FF), 2 Round Robin (RR), 
 	 * and 4 Batch (B).
 	 */
-	fork_processes();
+	//fork_processes();
 	
 	/*
 	 * Sleep for 30 seconds so that you can check the result with another 
