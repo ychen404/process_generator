@@ -90,7 +90,6 @@ void fork_processes()
 
 int main(void)
 {
-	
 	/*
 	 * So you have 1 default policy (TS), 1 FIFO (FF), 2 Round Robin (RR), 
 	 * and 4 Batch (B).
