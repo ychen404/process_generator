@@ -5,7 +5,6 @@
  * There are 1 default policy (TS), 1 FIFO policy (FF), 2 Round Robin policy (RR) 
  * and 4 Batch policy (B).
  */
-
 #define _GNU_SOURCE
 
 #include <stdio.h>
@@ -42,6 +41,7 @@ void fork_processes()
 			getpid(), getppid());
 		
 	 	param.sched_priority = 98;
+		
 		/*
 		 * Change the child 1 process to FIFO scheduling policy.
 		 * The sched_setscheduler() returns 0 on success and -1 on failure.
@@ -78,6 +78,7 @@ void fork_processes()
 		printf("Child 3-%d. My pid is %d and my parent's pid is %d\n", getpid(), 
 			getpid(), getppid());
 		param.sched_priority = 0;
+		
 		/*
 		 * Change the child 3 processes to batch.
 		 */
@@ -89,15 +90,18 @@ void fork_processes()
 
 int main(void)
 {
+	
 	/*
 	 * So you have 1 default policy (TS), 1 FIFO (FF), 2 Round Robin (RR), 
 	 * and 4 Batch (B).
 	 */
 	fork_processes();
+	
 	/*
 	 * Sleep for 30 seconds so that you can check the result with another 
 	 * terminal.
 	 */
 	sleep(30);
+	
 	return 0;
 }
