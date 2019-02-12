@@ -83,13 +83,6 @@ int main(void)
 			fprintf(stderr, "error setting scheduler, maker sure you are root\n");
 		}
 	}
-
-
-	/*
-	 * So you have 1 default policy (TS), 1 FIFO (FF), 2 Round Robin (RR), 
-	 * and 4 Batch (B).
-	 */
-	//fork_processes();
 	
 	/*
 	 * Sleep for 30 seconds so that you can check the result with another 
