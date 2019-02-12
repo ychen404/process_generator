@@ -1,3 +1,11 @@
+/*
+ * CSE 330 Spring 19'
+ * User space program for project 2-1 
+ * This program creates 8 processes with different scheduling policies
+ * There are 1 default policy (TS), 1 FIFO policy (FF), 2 Round Robin policy (RR) 
+ * and 4 Batch policy (B).
+ */
+
 #define _GNU_SOURCE
 
 #include <stdio.h>
@@ -5,107 +13,91 @@
 #include <stdlib.h>
 #include <sched.h>
 
-
 #define CURR_THREAD 0
-#define MY_PRIORITY 98
 
 /*
-
-Program starts in creating a parent process
-
-Parent fork()s, creating child 1.
-
-You now have two processes. We change the scheduling policy of the child 1 to FIFO scheduling policy.
-
-
-Parent and child 1 fork(), creating children 2.
-
-You now have four processes. Children 2 are changed to Round Robin scheduling policy
-
-
-Finally, we fork() again. You now have eight processes. And we change the newly fork() children scheduling policy to Batch.
-
-
-So you get 1 default policy (TS), 1 FIFO (FF), 2 Round Robin (RR), and 4 Batch (B).
-
-*/
-
-
-void printSchedulingPolicy(void)
+ * Create processes using fork() system call.
+ */
+void fork_processes()
 {
-	int which;
-	which = sched_getscheduler(0);
-	switch (which) {
-	case SCHED_OTHER: 
-			printf("default scheduling is being used\n");		
-		  	break;
-	case SCHED_FIFO:
-			printf("fifo scheduling is being used\n");		
-		  	break;
-	case SCHED_RR:		
-			printf("round robin scheduling is being used\n");	
-			break;	
-	case SCHED_BATCH:		
-			printf("batch scheduling is being used\n");
-		  	break;
-
-	}		
-
-}
-
-
-void forkProcesses()
-{
-
-	int ret;
+	int ret, ret_child_1, ret_child_2, ret_child_3;
 	struct sched_param param;
+	
+	/*
+	 * Retrieves the scheduling parameters from the current process.
+	 */
 	ret = sched_getparam(CURR_THREAD, &param);
 
-	int fork1 = fork();
-	if (fork1 == 0)
-	{
-		printf("Child 1\n");
+	/*
+	 * Call fork() to create a child process. You now have two processes. 
+	 */
+	ret_child_1 = fork();
+
+	/*
+	 * The fork() system call returns 0 to the child process and the pid to the 
+	 * parent process.
+	 */
+	if (ret_child_1 == 0){
+		printf("Child 1-%d. My pid is %d and my parent's pid is %d\n", getpid(), 
+			getpid(), getppid());
+		
 	 	param.sched_priority = 98;
+		/*
+		 * Change the child 1 process to FIFO scheduling policy.
+		 * The sched_setscheduler() returns 0 on success and -1 on failure.
+		 */
 		if (sched_setscheduler(CURR_THREAD, SCHED_FIFO, &param) == -1) {
-			fprintf(stderr, "error setting scheduler, maker sure you are root\n");
+		fprintf(stderr, "error setting scheduler, maker sure you are root\n");
 		}
 	}
 
-	int fork2 = fork();
-	if (fork2 == 0)
-	{
-		printf("Child 2\n");
+	/*
+	 * Call fork() to create a child process. You now have four processes. 
+	 */
+	ret_child_2 = fork();
+
+	if (ret_child_2 == 0){
+		printf("Child 2-%d. My pid is %d and my parent's pid is %d\n", getpid(), 
+			getpid(), getppid());
 		param.sched_priority = 97;
+
+		/*
+		 * Change the child 2 processes to Round Robin scheduling policy.
+		 */
 		if (sched_setscheduler(CURR_THREAD, SCHED_RR, &param) == -1) {
 		fprintf(stderr, "error setting scheduler, maker sure you are root\n");
 		}
 	
 	}
 
-	int fork3 = fork();
-	if (fork3 == 0)
-	{
-		printf("Child 3\n");
+	/*
+	 * Finally, we call fork() again. You now have eight processes.
+	 */
+	ret_child_3 = fork();
+	if (ret_child_3 == 0){
+		printf("Child 3-%d. My pid is %d and my parent's pid is %d\n", getpid(), 
+			getpid(), getppid());
 		param.sched_priority = 0;
+		/*
+		 * Change the child 3 processes to batch.
+		 */
 		if (sched_setscheduler(CURR_THREAD, SCHED_BATCH, &param) == -1) {
 		fprintf(stderr, "error setting scheduler, maker sure you are root\n");
 		}
 	}
-
 }
-
 
 int main(void)
 {
-
-	forkProcesses();
+	/*
+	 * So you have 1 default policy (TS), 1 FIFO (FF), 2 Round Robin (RR), 
+	 * and 4 Batch (B).
+	 */
+	fork_processes();
+	/*
+	 * Use endless loop to keep the program running so that you can check the 
+	 * result with another terminal.
+	 */
 	while(1){}
 	return 0;
 }
-
-
-
-
-
-
-
